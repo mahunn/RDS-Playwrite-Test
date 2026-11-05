@@ -2,9 +2,10 @@ import path from 'path';
 import { test, expect } from '../../../src/fixtures/base';
 import { RdsStudentLandingPage } from '../../../src/pages/RdsStudentLandingPage';
 import semesterDropData from '../../data/semester-drop-data.json';
+import studentData from '../../data/rds-student-data.json';
 
 test.describe('NSU RDS Student Semester Drop Application', () => {
-  test.use({ storageState: 'playwright/.auth/semester-drop-student.json' });
+  test.use({ storageState: 'playwright/.auth/inclusion-student.json' });
 
   test('navigates to Semester Drop under Services, fills and submits form, and verifies response @smoke @critical', async ({
     page,
@@ -14,7 +15,7 @@ test.describe('NSU RDS Student Semester Drop Application', () => {
     const studentLandingPage = new RdsStudentLandingPage(page);
 
     await test.step('Navigate to student dashboard', async () => {
-      await studentLandingPage.goto();
+      await studentLandingPage.goto(studentData.eligibleInclusionStudent);
       await expect(page).toHaveURL(/students\/landing/);
       await expect(studentLandingPage.welcomeHeading).toBeVisible();
     });
@@ -27,7 +28,8 @@ test.describe('NSU RDS Student Semester Drop Application', () => {
 
       const headingOrPending = semesterDropPage.pageHeading.or(semesterDropPage.pendingAlert);
       await expect(headingOrPending.first()).toBeVisible();
-      isFormAvailable = await semesterDropPage.pageHeading.isVisible();
+      const isPending = await semesterDropPage.pendingAlert.isVisible();
+      isFormAvailable = !isPending && (await semesterDropPage.submitButton.isVisible());
     });
 
     if (isFormAvailable) {
@@ -62,4 +64,3 @@ test.describe('NSU RDS Student Semester Drop Application', () => {
     }
   });
 });
-

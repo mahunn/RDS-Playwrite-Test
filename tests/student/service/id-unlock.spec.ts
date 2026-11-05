@@ -2,6 +2,7 @@ import path from 'path';
 import { test, expect } from '../../../src/fixtures/base';
 import { RdsStudentLandingPage } from '../../../src/pages/RdsStudentLandingPage';
 import idUnlockData from '../../data/id-unlock-data.json';
+import studentData from '../../data/rds-student-data.json';
 
 test.describe('NSU RDS Student ID Unlock Application', () => {
   test.use({ storageState: 'playwright/.auth/unlock-student.json' });
@@ -14,7 +15,7 @@ test.describe('NSU RDS Student ID Unlock Application', () => {
     const studentLandingPage = new RdsStudentLandingPage(page);
 
     await test.step('Navigate to student dashboard', async () => {
-      await studentLandingPage.goto();
+      await studentLandingPage.goto(studentData.unlockIdStudent);
       await expect(page).toHaveURL(/students\/landing/);
       await expect(studentLandingPage.welcomeHeading).toBeVisible();
     });
@@ -27,7 +28,8 @@ test.describe('NSU RDS Student ID Unlock Application', () => {
 
       const headingOrPending = idUnlockPage.pageHeading.or(idUnlockPage.pendingAlert);
       await expect(headingOrPending.first()).toBeVisible();
-      isFormAvailable = await idUnlockPage.pageHeading.isVisible();
+      const isPending = await idUnlockPage.pendingAlert.isVisible();
+      isFormAvailable = !isPending && (await idUnlockPage.submitButton.isVisible());
     });
 
     if (isFormAvailable) {
@@ -58,4 +60,3 @@ test.describe('NSU RDS Student ID Unlock Application', () => {
     }
   });
 });
-

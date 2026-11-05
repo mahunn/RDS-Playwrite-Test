@@ -8,8 +8,13 @@ import studentData from './data/rds-student-data.json';
 import testUsers from './data/test-users.json';
 
 const authDir = path.resolve('playwright/.auth');
+const MAX_SESSION_AGE_MS = 5 * 60 * 1000; // 5 minutes
 
-
+/**
+ * Checks whether an existing storageState session is still valid and fresh.
+ * If fresh (< 5 mins) and active, skips re-login.
+ * If absent, stale, or expired, performs a fresh login and saves the state.
+ */
 async function ensureAuthenticated(
   browser: Browser,
   user: { username: string; password: string; twofaCode?: string },
@@ -20,29 +25,31 @@ async function ensureAuthenticated(
 
   if (fs.existsSync(authFilePath)) {
     try {
-      const probeContext = await browser.newContext({
-        storageState: authFilePath,
-        baseURL: BASE_URL,
-      });
-      const probePage = await probeContext.newPage();
-      await probePage.goto('students/landing', { timeout: 10000 });
-      await probePage.waitForLoadState('domcontentloaded');
+      const stats = fs.statSync(authFilePath);
+      const isFresh = Date.now() - stats.mtimeMs < MAX_SESSION_AGE_MS;
 
-      if (probePage.url().includes('students/landing')) {
-        // Session is already authenticated and active!
+      if (isFresh) {
+        const probeContext = await browser.newContext({
+          storageState: authFilePath,
+          baseURL: BASE_URL,
+        });
+        const probePage = await probeContext.newPage();
+        await probePage.goto('students/landing', { timeout: 10000 });
+        await probePage.waitForLoadState('domcontentloaded');
+
+        if (probePage.url().includes('students/landing')) {
+          // Session is already authenticated and actively valid!
+          await probePage.close();
+          await probeContext.close();
+
+          for (const copyName of extraCopies) {
+            fs.copyFileSync(authFilePath, path.join(authDir, copyName));
+          }
+          return;
+        }
         await probePage.close();
         await probeContext.close();
-
-        for (const copyName of extraCopies) {
-          const copyPath = path.join(authDir, copyName);
-          if (!fs.existsSync(copyPath)) {
-            fs.copyFileSync(authFilePath, copyPath);
-          }
-        }
-        return;
       }
-      await probePage.close();
-      await probeContext.close();
     } catch {
       // Probe failed, fall through to login
     }

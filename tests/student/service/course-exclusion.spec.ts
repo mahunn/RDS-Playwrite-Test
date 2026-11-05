@@ -2,6 +2,7 @@ import path from 'path';
 import { test, expect } from '../../../src/fixtures/base';
 import { RdsStudentLandingPage } from '../../../src/pages/RdsStudentLandingPage';
 import exclusionData from '../../data/course-exclusion-data.json';
+import studentData from '../../data/rds-student-data.json';
 
 test.describe('NSU RDS Student Course Exclusion Request', () => {
   test.use({ storageState: 'playwright/.auth/senior-student.json' });
@@ -14,7 +15,7 @@ test.describe('NSU RDS Student Course Exclusion Request', () => {
     const studentLandingPage = new RdsStudentLandingPage(page);
 
     await test.step('Navigate to student dashboard', async () => {
-      await studentLandingPage.goto();
+      await studentLandingPage.goto(studentData.eligibleExclusionStudent);
       await expect(page).toHaveURL(/students\/landing/);
       await expect(studentLandingPage.welcomeHeading).toBeVisible();
     });

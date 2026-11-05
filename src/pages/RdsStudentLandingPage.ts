@@ -1,3 +1,4 @@
+import * as path from 'path';
 import { Page, Locator } from '@playwright/test';
 import { BasePage } from './BasePage';
 import { RdsLoginPage } from './RdsLoginPage';
@@ -19,6 +20,8 @@ import { PreAdvisedCoursesPage } from './PreAdvisedCoursesPage';
 import { RdsWaiverCoursePage } from './RdsWaiverCoursePage';
 import { RdsWritingCenterPage } from './RdsWritingCenterPage';
 import { RdsApplicationStatusPage } from './RdsApplicationStatusPage';
+import { RdsSmsHistoryPage } from './RdsSmsHistoryPage';
+import studentData from '../../tests/data/rds-student-data.json';
 
 export class RdsStudentLandingPage extends BasePage {
   readonly welcomeHeading: Locator;
@@ -35,6 +38,7 @@ export class RdsStudentLandingPage extends BasePage {
   readonly waiverCourseSubmenuLink: Locator;
   readonly writingCenterSubmenuLink: Locator;
   readonly applicationStatusSubmenuLink: Locator;
+  readonly smsHistorySubmenuLink: Locator;
 
   readonly profileDropdown: Locator;
   readonly studentInfoLink: Locator;
@@ -68,6 +72,7 @@ export class RdsStudentLandingPage extends BasePage {
     this.waiverCourseSubmenuLink = this.page.getByRole('link', { name: 'Waiver Course Issue' });
     this.writingCenterSubmenuLink = this.page.getByRole('link', { name: 'NSU Writing Center' });
     this.applicationStatusSubmenuLink = this.page.getByRole('link', { name: 'Application Status' });
+    this.smsHistorySubmenuLink = this.page.locator('a[href*="students/sms_history"]').first();
 
     this.profileDropdown = page.locator('a.dropdown-toggle').filter({ hasText: 'Profile' }).first();
     this.studentInfoLink = page.getByRole('link', { name: 'Student Information' });
@@ -86,15 +91,31 @@ export class RdsStudentLandingPage extends BasePage {
     this.logoutLink = this.page.getByRole('link', { name: 'Logout' });
   }
 
-  async goto(): Promise<void> {
+  async goto(user?: { username: string; password: string; twofaCode?: string }): Promise<void> {
     await this.page.goto('students/landing');
     await this.waitForReady();
 
-    // Auto-recover if session was invalidated or expired
-    if (this.page.url().includes('/login') || this.page.url().endsWith('/rds/') || this.page.url().endsWith('/rds_live_php84/') || !this.page.url().includes('students/landing')) {
+    // If redirected to login due to session timeout or server-side invalidation
+    if (!this.page.url().includes('students/landing')) {
+      const userToLogin = user || studentData.student;
       const loginPage = new RdsLoginPage(this.page);
-      await loginPage.loginAsStudent({ username: '2512560', password: '123' });
+      await loginPage.loginAsStudent(userToLogin);
       await this.waitForReady();
+
+      try {
+        let authFileName = 'student.json';
+        if (userToLogin.username === studentData.eligibleExclusionStudent.username) {
+          authFileName = 'senior-student.json';
+        } else if (userToLogin.username === studentData.eligibleInclusionStudent.username) {
+          authFileName = 'inclusion-student.json';
+        } else if (userToLogin.username === studentData.unlockIdStudent.username) {
+          authFileName = 'unlock-student.json';
+        }
+        const authPath = path.resolve('playwright/.auth', authFileName);
+        await this.page.context().storageState({ path: authPath });
+      } catch {
+        // storageState sync is best effort
+      }
     }
   }
 
@@ -235,6 +256,13 @@ export class RdsStudentLandingPage extends BasePage {
     ]);
     await this.waitForReady();
     return new RdsApplicationStatusPage(this.page);
+  }
+
+  async navigateToSmsHistory(): Promise<RdsSmsHistoryPage> {
+    await this.servicesMenuLink.click();
+    await this.smsHistorySubmenuLink.click({ force: true });
+    await this.waitForReady();
+    return new RdsSmsHistoryPage(this.page);
   }
 
   async logout(): Promise<void> {

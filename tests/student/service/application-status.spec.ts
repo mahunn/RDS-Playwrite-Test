@@ -14,7 +14,7 @@ test.describe('NSU RDS Student Application Status Service', () => {
       const studentLandingPage = new RdsStudentLandingPage(page);
 
       await test.step('Navigate to student dashboard', async () => {
-        await studentLandingPage.goto();
+        await studentLandingPage.goto(studentData.student);
         await expect(page).toHaveURL(/students\/landing/);
         await expect(studentLandingPage.welcomeHeading).toBeVisible();
       });
@@ -50,7 +50,7 @@ test.describe('NSU RDS Student Application Status Service', () => {
       const studentLandingPage = new RdsStudentLandingPage(page);
 
       await test.step('Navigate to student dashboard', async () => {
-        await studentLandingPage.goto();
+        await studentLandingPage.goto(studentData.eligibleExclusionStudent);
         await expect(page).toHaveURL(/students\/landing/);
         await expect(studentLandingPage.welcomeHeading).toBeVisible();
       });
@@ -80,7 +80,7 @@ test.describe('NSU RDS Student Application Status Service', () => {
       const studentLandingPage = new RdsStudentLandingPage(page);
 
       await test.step('Navigate to student dashboard', async () => {
-        await studentLandingPage.goto();
+        await studentLandingPage.goto(studentData.eligibleInclusionStudent);
         await expect(page).toHaveURL(/students\/landing/);
         await expect(studentLandingPage.welcomeHeading).toBeVisible();
       });
@@ -100,4 +100,3 @@ test.describe('NSU RDS Student Application Status Service', () => {
     });
   });
 });
-

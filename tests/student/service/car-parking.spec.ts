@@ -1,6 +1,7 @@
 import { test, expect } from '../../../src/fixtures/base';
 import { RdsStudentLandingPage } from '../../../src/pages/RdsStudentLandingPage';
 import parkingTemplate from '../../data/car-parking-data.json';
+import studentData from '../../data/rds-student-data.json';
 
 test.describe('NSU RDS Student Car Parking Service', () => {
   test.use({ storageState: 'playwright/.auth/student.json' });
@@ -13,7 +14,7 @@ test.describe('NSU RDS Student Car Parking Service', () => {
     const studentLandingPage = new RdsStudentLandingPage(page);
 
     await test.step('Navigate to student dashboard', async () => {
-      await studentLandingPage.goto();
+      await studentLandingPage.goto(studentData.student);
       await expect(page).toHaveURL(/students\/landing/);
       await expect(studentLandingPage.welcomeHeading).toBeVisible();
     });

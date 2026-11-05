@@ -23,8 +23,27 @@ export default defineConfig({
       testMatch: /.*\.setup\.ts/,
     },
     {
+      name: 'services',
+      testMatch: /tests\/student\/service\/.*\.spec\.ts/,
+      testIgnore: [/.*application-status\.spec\.ts/],
+      dependencies: ['setup'],
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: 'playwright/.auth/student.json',
+      },
+    },
+    {
+      name: 'service-status',
+      testMatch: /tests\/student\/service\/application-status\.spec\.ts/,
+      dependencies: ['services'],
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: 'playwright/.auth/student.json',
+      },
+    },
+    {
       name: 'student',
-      testMatch: /tests\/student\/.*\.spec\.ts/,
+      testMatch: /tests\/student\/(?!service\/).*\.spec\.ts/,
       dependencies: ['setup'],
       use: {
         ...devices['Desktop Chrome'],

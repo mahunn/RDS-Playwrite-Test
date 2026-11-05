@@ -18,7 +18,10 @@
     "test:preadvising:headed": "playwright test tests/student/advising/pre-advising.spec.ts --headed",
     "test:pre-courses": "playwright test tests/student/advising/pre-advised-courses.spec.ts",
     "test:pre-courses:headed": "playwright test tests/student/advising/pre-advised-courses.spec.ts --headed",
+    "test:services": "playwright test tests/student/service/ --workers 1",
     "test:service": "playwright test tests/student/service/ --workers 1",
+    "test:status": "playwright test tests/student/service/application-status.spec.ts",
+    "test:app-status": "playwright test tests/student/service/application-status.spec.ts",
     "test:parking": "playwright test tests/student/service/car-parking.spec.ts",
     "test:exclusion": "playwright test tests/student/service/course-exclusion.spec.ts",
     "test:inclusion": "playwright test tests/student/service/course-inclusion.spec.ts",
@@ -29,14 +32,14 @@
     "test:drop": "playwright test tests/student/service/semester-drop.spec.ts",
     "test:waiver": "playwright test tests/student/service/waiver-course.spec.ts",
     "test:writing-center": "playwright test tests/student/service/writing-center.spec.ts",
-    "test:app-status": "playwright test tests/student/service/application-status.spec.ts",
+    "test:sms-history": "playwright test tests/student/sms-history/sms-history.spec.ts",
     "test:faculty": "playwright test tests/faculty/exam-marks-entry.spec.ts",
-    "map:portal": "playwright test tests/student/course-advising.spec.ts",
+    "map:portal": "playwright test tests/student/advising/course-advising.spec.ts",
     "test:headed": "playwright test --headed",
     "test:ui": "playwright test --ui",
     "test:report": "playwright test && playwright show-report",
     "report": "playwright show-report",
-    "sync": "git checkout main && git pull origin main"
+    "sync": "git checkout main && git pull mahunn main"
   },
   "keywords": [
     "playwright",

@@ -1,6 +1,7 @@
 import { test, expect } from '../../../src/fixtures/base';
 import { RdsStudentLandingPage } from '../../../src/pages/RdsStudentLandingPage';
 import forgotIdData from '../../data/forgot-id-data.json';
+import studentData from '../../data/rds-student-data.json';
 
 test.describe('NSU RDS Student Forgot RFID Application', () => {
   test.use({ storageState: 'playwright/.auth/student.json' });
@@ -13,7 +14,7 @@ test.describe('NSU RDS Student Forgot RFID Application', () => {
     const studentLandingPage = new RdsStudentLandingPage(page);
 
     await test.step('Navigate to student dashboard', async () => {
-      await studentLandingPage.goto();
+      await studentLandingPage.goto(studentData.student);
       await expect(page).toHaveURL(/students\/landing/);
       await expect(studentLandingPage.welcomeHeading).toBeVisible();
     });
@@ -26,7 +27,8 @@ test.describe('NSU RDS Student Forgot RFID Application', () => {
 
       const headingOrPending = forgotIdPage.pageHeading.or(forgotIdPage.pendingAlert);
       await expect(headingOrPending.first()).toBeVisible();
-      isFormAvailable = await forgotIdPage.pageHeading.isVisible();
+      const isPending = await forgotIdPage.pendingAlert.isVisible();
+      isFormAvailable = !isPending && (await forgotIdPage.submitButton.isVisible());
     });
 
     if (isFormAvailable) {
