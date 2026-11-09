@@ -13,12 +13,16 @@ export class RdsLoginPage extends BasePage {
 
   constructor(page: Page) {
     super(page);
-    this.usernameInput = this.page.getByRole('textbox', { name: /enter your username/i });
-    this.nextButton = this.page.getByRole('button', { name: 'Next' });
-    this.passwordInput = this.page.getByPlaceholder(/enter your password/i);
-    this.twoFaInput = this.page.getByPlaceholder(/enter authentication code/i);
-    this.loginButton = this.page.getByRole('button', { name: 'Login' });
-    this.takeoverYesButton = this.page.getByRole('button', { name: 'Yes' });
+    this.usernameInput = this.page
+      .getByRole('textbox', { name: /NSU ID|username/i })
+      .or(this.page.getByPlaceholder(/enter (your )?(nsu id|username)/i));
+    this.nextButton = this.page.getByRole('button', { name: /Next/i });
+    this.passwordInput = this.page
+      .getByLabel(/^Password$/i)
+      .or(this.page.getByPlaceholder(/enter (your )?password/i));
+    this.twoFaInput = this.page.getByPlaceholder(/enter (authentication code|verification code|2fa)/i);
+    this.loginButton = this.page.getByRole('button', { name: /Login/i });
+    this.takeoverYesButton = this.page.getByRole('button', { name: /Yes/i }).first();
   }
 
   async goto(): Promise<void> {
@@ -40,9 +44,14 @@ export class RdsLoginPage extends BasePage {
     await this.loginButton.click();
     await this.waitForReady();
 
-    // If already logged in on another device/browser, confirm session takeover
+    // If duplicate session takeover prompt appears (either via modal or confirmTakeover route)
     try {
-      if (await this.takeoverYesButton.waitFor({ state: 'visible', timeout: 3000 }).then(() => true).catch(() => false)) {
+      const reachedTakeover = await Promise.race([
+        this.page.waitForURL(/confirmTakeover/, { timeout: 3000 }).then(() => true).catch(() => false),
+        this.takeoverYesButton.waitFor({ state: 'visible', timeout: 3000 }).then(() => true).catch(() => false),
+      ]);
+
+      if (reachedTakeover || this.page.url().includes('confirmTakeover') || (await this.takeoverYesButton.isVisible())) {
         await this.takeoverYesButton.click();
         await this.waitForReady();
       }

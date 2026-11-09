@@ -21,6 +21,7 @@ import { RdsWaiverCoursePage } from './RdsWaiverCoursePage';
 import { RdsWritingCenterPage } from './RdsWritingCenterPage';
 import { RdsApplicationStatusPage } from './RdsApplicationStatusPage';
 import { RdsSmsHistoryPage } from './RdsSmsHistoryPage';
+import { RdsCourseRequestPage } from './RdsCourseRequestPage';
 import { RdsGradeHistoryPage } from './RdsGradeHistoryPage';
 import { RdsCourseWiseMarksPage } from './RdsCourseWiseMarksPage';
 import { RdsAttendancePage } from './RdsAttendancePage';
@@ -43,6 +44,7 @@ export class RdsStudentLandingPage extends BasePage {
   readonly writingCenterSubmenuLink: Locator;
   readonly applicationStatusSubmenuLink: Locator;
   readonly smsHistorySubmenuLink: Locator;
+  readonly courseRequestSubmenuLink: Locator;
 
   readonly profileDropdown: Locator;
   readonly studentInfoLink: Locator;
@@ -83,6 +85,7 @@ export class RdsStudentLandingPage extends BasePage {
     this.writingCenterSubmenuLink = this.page.getByRole('link', { name: 'NSU Writing Center' });
     this.applicationStatusSubmenuLink = this.page.getByRole('link', { name: 'Application Status' });
     this.smsHistorySubmenuLink = this.page.locator('a[href*="students/sms_history"]').first();
+    this.courseRequestSubmenuLink = this.page.locator('a[href*="common/feedback/RequestCourse"]').first();
 
     this.profileDropdown = page.locator('a.dropdown-toggle').filter({ hasText: 'Profile' }).first();
     this.studentInfoLink = page.getByRole('link', { name: 'Student Information' });
@@ -303,6 +306,13 @@ export class RdsStudentLandingPage extends BasePage {
     await this.smsHistorySubmenuLink.click({ force: true });
     await this.waitForReady();
     return new RdsSmsHistoryPage(this.page);
+  }
+
+  async navigateToCourseRequest(): Promise<RdsCourseRequestPage> {
+    await this.servicesMenuLink.click();
+    await this.courseRequestSubmenuLink.click({ force: true });
+    await this.waitForReady();
+    return new RdsCourseRequestPage(this.page);
   }
 
   async navigateToAttendance(): Promise<RdsAttendancePage> {

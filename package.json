@@ -42,6 +42,7 @@
     "test:waiver": "playwright test tests/student/service/waiver-course.spec.ts",
     "test:writing-center": "playwright test tests/student/service/writing-center.spec.ts",
     "test:sms-history": "playwright test tests/student/sms-history/sms-history.spec.ts",
+    "test:course-request": "playwright test tests/student/course-request/course-request.spec.ts",
     "test:faculty": "playwright test tests/faculty/exam-marks-entry.spec.ts",
     "map:portal": "playwright test tests/student/advising/course-advising.spec.ts",
     "test:headed": "playwright test --headed",

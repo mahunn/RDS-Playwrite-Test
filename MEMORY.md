@@ -74,6 +74,7 @@ tests/student/
 | `RdsCourseWiseMarksPage.ts`| `students/grade_history/exam_marks` | Semester dropdown filter, See Marks button, Course/Section tables & breakdown |
 | `RdsAttendancePage.ts` | `attendance/attendance/studentAttendanceLanding` | Semester selector, course table, Check Attendance detail view & lecture logs, Back button |
 | `RdsFacultyEvaluationPage.ts` | `students/FacultyEvaluation` | Schedule window alert notification & footer brand notice |
+| `RdsCourseRequestPage.ts` | `common/feedback/RequestCourse` | Pre-advised course request dropdown & department submission (`SaveRequestedCourses`) |
 | `Rds*ServicePage.ts` | `bpm/*` | Parking, Credit Status, Inclusions, Drop, Leave, Waiver, Writing Center, App Status |
 
 ---
@@ -101,6 +102,8 @@ tests/student/
 - `npm run test:profile` — Student profile suite
 - `npm run test:slip` — Advising slip suite
 - `npm run test:preadvising` — Pre-advising suite
+- `npm run test:sms-history` — SMS history service spec
+- `npm run test:course-request` — Course request service spec
 - `npm run test:service` — All student service request tests
 - `npm run report` — Serve native Playwright HTML report (`playwright-report/index.html`)
 - Standalone HTML Report: `playwright-report/report.html` (double-clickable directly on `file://` without server)

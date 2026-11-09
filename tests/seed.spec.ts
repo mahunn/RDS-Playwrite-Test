@@ -14,6 +14,10 @@ test.describe('RDS Portal Environment Baseline @smoke', () => {
     await expect(loginPage.usernameInput).toBeVisible();
     await expect(loginPage.usernameInput).toBeEmpty();
     await expect(loginPage.nextButton).toBeVisible();
+    await expect(loginPage.nextButton).toBeDisabled();
+
+    // Verify entering username enables the next button
+    await loginPage.fillUsername('2421354');
     await expect(loginPage.nextButton).toBeEnabled();
 
     // Verify auxiliary elements
