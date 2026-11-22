@@ -15,5 +15,13 @@
     "email": "0y8shifa@gmail.com",
     "fatherName": "Shadath Hossain Miraz",
     "motherName": "Jobeda Hossain Shahina"
+  },
+  "studentBorshan": {
+    "username": "2512570",
+    "password": "123",
+    "fullName": "Borshan Andrio Purification",
+    "studentId": "2512570642",
+    "cgpa": "3.17",
+    "status": "Enrolled"
   }
 }

@@ -36,6 +36,9 @@ npx.cmd playwright test tests/student/service/car-parking.spec.ts --headed
 
 # SMS History (Headed)
 npx.cmd playwright test tests/student/sms-history/sms-history.spec.ts --headed
+
+# Course Request (Headed)
+npx.cmd playwright test tests/student/course-request/course-request.spec.ts --headed
 ```
 
 ### 2. Fast Headless Runs (Individual Modules)
@@ -60,6 +63,7 @@ npm.cmd run test:drop           # Semester Drop Application
 npm.cmd run test:waiver         # Waiver Course Issue Service
 npm.cmd run test:writing-center # NSU Writing Center Appointment Booking
 npm.cmd run test:sms-history    # SMS History Service & Filter Audit
+npm.cmd run test:course-request # Course Request Service & Department Submission
 npm.cmd run test:faculty        # Faculty Exam Marks Batch Entry
 ```
 

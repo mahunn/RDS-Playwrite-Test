@@ -61,12 +61,12 @@ tests/student/
 | Page Object | Corresponding Route | Primary Purpose |
 |---|---|---|
 | `BasePage.ts` | Shared base | `waitForReady()`, `page` wrapper |
-| `RdsLoginPage.ts` / `LoginPage.ts` | `/` | Two-step student/faculty login with session takeover |
+| `RdsLoginPage.ts` / `LoginPage.ts` | `/` | Two-step student/faculty login: Step 1 ("NSU Portal : Login", placeholder "Please enter your username", "Next" button); Step 2 ("Welcome", user display, placeholder "Please enter your password", "Login" button), session takeover handling |
 | `RdsStudentLandingPage.ts` | `students/landing` | Main navbar menu navigation for all student portals |
 | `StudentProfilePage.ts` | `students/profile` | Personal info, contact details, academic standing |
 | `ChangePasswordPage.ts` | `students/change_password` | Password change form |
 | `MajorDeclarationPage.ts`| `students/major` | Major declaration & 66-credits requirement alert |
-| `AdvisingPage.ts` | `students/advising` | Advising window course selection |
+| `AdvisingPage.ts` | `students/advising` | Advising window: search, offerings list, course selection, dropping/discarding, section switching |
 | `AdvisingSlipPage.ts` | `students/print_slip/printSlipIndex` | Semester selector & 4-copy advising slip |
 | `PreAdvisingPage.ts` | `students/preadvising` | Quiz questionnaire & course selection |
 | `PreAdvisedCoursesPage.ts`| `students/preadvising/preAdvisingSlip` | Chosen pre-advised courses slip |
@@ -74,6 +74,7 @@ tests/student/
 | `RdsCourseWiseMarksPage.ts`| `students/grade_history/exam_marks` | Semester dropdown filter, See Marks button, Course/Section tables & breakdown |
 | `RdsAttendancePage.ts` | `attendance/attendance/studentAttendanceLanding` | Semester selector, course table, Check Attendance detail view & lecture logs, Back button |
 | `RdsFacultyEvaluationPage.ts` | `students/FacultyEvaluation` | Schedule window alert notification & footer brand notice |
+| `RdsCourseRequestPage.ts` | `common/feedback/RequestCourse` | Pre-advised course request dropdown & department submission (`SaveRequestedCourses`) |
 | `Rds*ServicePage.ts` | `bpm/*` | Parking, Credit Status, Inclusions, Drop, Leave, Waiver, Writing Center, App Status |
 
 ---
@@ -101,6 +102,8 @@ tests/student/
 - `npm run test:profile` — Student profile suite
 - `npm run test:slip` — Advising slip suite
 - `npm run test:preadvising` — Pre-advising suite
+- `npm run test:sms-history` — SMS history service spec
+- `npm run test:course-request` — Course request service spec
 - `npm run test:service` — All student service request tests
 - `npm run report` — Serve native Playwright HTML report (`playwright-report/index.html`)
 - Standalone HTML Report: `playwright-report/report.html` (double-clickable directly on `file://` without server)

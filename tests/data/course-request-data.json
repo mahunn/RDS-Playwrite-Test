@@ -1,0 +1,6 @@
+{
+  "testCourseCode": "CSE115",
+  "expectedHeading": "Course Request Process",
+  "expectedNotice": "You may request for courses from your pre-advised courses list only(if any).",
+  "expectedSuccessMessage": "Your request for the courses CSE115 will be submitted to your department"
+}
